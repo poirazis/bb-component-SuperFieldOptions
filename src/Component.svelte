@@ -1,6 +1,6 @@
 <script>
   import { getContext , onDestroy} from "svelte";
-  import { SuperCell } from "../../bb_super_components_shared/src/lib"
+  import CellOptions from "../../bb_super_components_shared/src/lib/SuperCell/cells/CellOptions.svelte";
 
   const { styleable, builderStore, componentStore } = getContext("sdk");
   const component = getContext("component");
@@ -12,10 +12,8 @@
   const formApi = formContext?.formApi;
 
   export let field;
-  export let controlType
-  export let useOptionColors
-  export let optionsViewMode
-  
+  export let controlType = "select"
+
   export let customButtons
 
   export let frontButtons = [];
@@ -28,7 +26,6 @@
   export let buttonsSelected = [0];
 
   export let fieldLabel;
-  export let fieldType
   export let span = 6;
   export let inForm = false;
   export let placeholder
@@ -36,16 +33,18 @@
   export let disabled
   export let readonly
 
-  export let frontIcon
+  export let icon
+  export let iconPosition
 
   export let optionsSource
   export let datasource
   export let valueField
   export let labelField
-  export let viewMode
-  export let optionsColors = true
+
   export let customOptions
   export let optionsArrangement
+  export let useOptionColors
+  export let optionsViewMode
 
   let formField;
   let formStep;
@@ -167,7 +166,7 @@
       </div>
     {/if}
 
-    <SuperCell
+    <CellOptions
       bind:cellState
       cellOptions={{ 
         placeholder, 
@@ -182,13 +181,13 @@
         optionsViewMode,
         customOptions,
         role: "formInput", 
-        iconFront: frontIcon,
+        iconFront: icon,
         }}
-      {value}
       {fieldSchema}
-      editable
+      {value}
+      multi
       on:change={(e) => fieldApi?.setValue(e.detail)}
-      on:blur={cellState.lostFocus}
+      on:blur
     />
 
     {#if customButtons && buttons?.length}

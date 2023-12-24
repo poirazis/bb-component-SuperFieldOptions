@@ -3,9 +3,9 @@
   "metadata": {},
   "schema": {
     "name": "bb-component-SuperFieldOptions",
-    "friendlyName": "Super Field - Multi Select",
+    "friendlyName": "Super Field - Options",
     "description": "An Options Input Field component for Budibase",
-    "icon": "Text",
+    "icon": "MultipleCheck",
     "settings": [
       {
         "type": "field/array",
@@ -175,6 +175,23 @@
           "setting": "optionsSource",
           "value": "custom"
         }
+      },
+      {
+        "tag" : "style",
+        "type" : "icon",
+        "key" : "icon",
+        "label" : "Icon"
+      },
+      {
+        "tag" : "style",
+        "type" : "select",
+        "key" : "iconPosition",
+        "label" : "Icon Position",
+        "dependsOn" : "icon",
+        "options" : [
+          { "label" : "Inline", "value" : "inline" },
+          { "label" : "In Label", "value" : "inlabel" }
+        ]
       },
       {
         "tag" : "style",
