@@ -1,6 +1,6 @@
 <script>
   import { getContext , onDestroy} from "svelte";
-  import CellOptions from "../../bb_super_components_shared/src/lib/SuperCell/cells/CellOptions.svelte";
+  import CellOptions from "../../bb_super_components_shared/src/lib/SuperTableCells/CellOptions.svelte";
 
   const { styleable, Provider, Block, BlockComponent } = getContext("sdk");
   const component = getContext("component");
@@ -159,6 +159,7 @@
               type = "plugin/bb-component-SuperButton"
               props = {{
                 size: "M",
+                disabled,
                 text,
                 onClick
               }}>

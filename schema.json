@@ -258,11 +258,6 @@
       },
       {
         "type" : "boolean",
-        "key"  : "clearValueIcon",
-        "label": "Clear Value Icon"
-      },
-      {
-        "type" : "boolean",
         "key"  : "showIcon",
         "label": "Add Inline Icon",
         "dependsOn" : { "setting" : "controlType" , "value": "select"}
