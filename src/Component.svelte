@@ -39,6 +39,7 @@
   export let filter
   export let valueColumn
   export let labelColumn
+  export let columns
   export let colorColumn
   export let iconColumn
   export let customOptions
@@ -46,6 +47,7 @@
   export let useOptionColors
   export let useOptionIcons
   export let optionsViewMode
+  export let richData
 
   let formField;
   let formStep;
@@ -98,6 +100,7 @@
       controlType,
       optionsArrangement,
       optionsSource,
+      richData,
       datasource,
       limit,
       sortColumn,
@@ -105,6 +108,7 @@
       filter,
       valueColumn,
       labelColumn,
+      columns,
       colorColumn,
       iconColumn,
       useOptionColors,

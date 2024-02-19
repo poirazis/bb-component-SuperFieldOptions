@@ -143,6 +143,13 @@
         "dependsOn" : { "setting" : "optionsSource", "value" : "data" },
         "settings" : [
           {
+            "type" : "boolean",
+            "key" : "richData",
+            "label" : "Rich Data",
+            "resetOn" : "optionsSource",
+            "defaultValue" : false
+          },
+          {
             "type": "dataSource",
             "label": "Data",
             "key": "datasource",
@@ -193,30 +200,35 @@
             "label": "Label column",
             "key": "labelColumn",
             "resetOn" : "datasource",
-            "dependsOn": {
-              "setting": "optionsSource",
-              "value": "data"
-            }
+            "dependsOn": {"setting" : "richData", "value": false }
           },
           {
             "type": "field",
             "label": "Color column",
             "key": "colorColumn",
             "resetOn" : "datasource",
-            "dependsOn": {
-              "setting": "optionsSource",
-              "value": "data"
-            }
+            "dependsOn": {"setting" : "richData", "value": false }
           },
           {
             "type": "field",
             "label": "Icon column",
             "key": "iconColumn",
             "resetOn" : "datasource",
-            "dependsOn": {
-              "setting": "optionsSource",
-              "value": "data"
-            }
+            "dependsOn": {"setting" : "richData", "value": false }
+          }
+        ]
+      },
+      {
+        "section" : true,
+        "dependsOn" : { "setting" : "richData", "value" : true },
+        "name" : "Rich Data Options",
+        "settings" : [
+          {
+            "type": "columns",
+            "label": "Columns",
+            "key": "columns",
+            "resetOn" : "datasource",
+            "dependsOn": {"setting" : "richData", "value": true }
           }
         ]
       },
@@ -228,6 +240,20 @@
           "setting": "optionsSource",
           "value": "custom"
         }
+      },
+      {
+        "type": "boolean",
+        "label": "Debounced",
+        "key": "debounced",
+        "defaultValue": false
+      },
+      {
+        "type": "number",
+        "label": "Debounce Delay (ms)",
+        "key": "debounceDelay",
+        "minValue" : "200",
+        "defaultValue": 750,
+        "dependsOn": "debounced"
       },
       {
         "type": "boolean",
