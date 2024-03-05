@@ -31,7 +31,9 @@
       {
         "type": "text",
         "label": "Label",
-        "key": "label"
+        "key": "fieldLabel",
+        "placeholder" : "Field Name",
+        "resetOn" : "field"
       },
       {
         "type": "text",
@@ -146,7 +148,8 @@
             "type" : "boolean",
             "key" : "richData",
             "label" : "Rich Data",
-            "resetOn" : "optionsSource",
+            "resetOn" : ["optionsSource", "controlType"],
+            "dependsOn" : { "setting" : "controlType", "value" : "select" },
             "defaultValue" : false
           },
           {
@@ -328,6 +331,7 @@
         "defaultValue": "text",
         "showInBar": true,
         "barStyle": "buttons",
+        "dependsOn" : {"setting" : "controlType" , "value" : "select"},
         "options": [
           {
             "label": "Pills",

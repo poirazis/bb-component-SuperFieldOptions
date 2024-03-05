@@ -18,7 +18,7 @@
   export let buttons = [];
   export let buttonsQuiet = true
 
-  export let label;
+  export let fieldLabel;
   export let span = 6;
   export let placeholder = "Choose Options"
   export let defaultValue
@@ -58,6 +58,7 @@
   let cellState
 
   $: formStep = formStepContext ? $formStepContext || 1 : 1;
+  $: label = fieldLabel || fieldSchema?.name
 
   $: formField = formApi?.registerField(
     field,
