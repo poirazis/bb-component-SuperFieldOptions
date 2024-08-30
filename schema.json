@@ -31,9 +31,8 @@
       {
         "type": "text",
         "label": "Label",
-        "key": "fieldLabel",
-        "placeholder": "Field Name",
-        "resetOn": "field"
+        "key": "label",
+        "placeholder": "Field Name"
       },
       {
         "type": "text",
@@ -70,60 +69,6 @@
       },
       {
         "type": "select",
-        "label": "Control Type",
-        "key": "controlType",
-        "defaultValue": "select",
-        "placeholder": "Pick an options type",
-        "options": [
-          {
-            "label": "Select",
-            "value": "select"
-          },
-          {
-            "label": "Checkboxes",
-            "value": "checkbox"
-          },
-          {
-            "label": "Switches",
-            "value": "switch"
-          }
-        ]
-      },
-      {
-        "type": "select",
-        "label": "Arrangement",
-        "key": "optionsArrangement",
-        "defaultValue": 1,
-        "showInBar": false,
-        "barStyle": "buttons",
-        "dependsOn": {
-          "setting": "controlType",
-          "value": "select",
-          "invert": true
-        },
-        "options": [
-          {
-            "label": "1 column",
-            "value": 1,
-            "barIcon": "Stop",
-            "barTitle": "1 column"
-          },
-          {
-            "label": "2 columns",
-            "value": 2,
-            "barIcon": "ColumnTwoA",
-            "barTitle": "2 columns"
-          },
-          {
-            "label": "3 columns",
-            "value": 3,
-            "barIcon": "ViewColumn",
-            "barTitle": "3 columns"
-          }
-        ]
-      },
-      {
-        "type": "select",
         "label": "Options source",
         "key": "optionsSource",
         "defaultValue": "schema",
@@ -144,18 +89,62 @@
         ]
       },
       {
+        "type": "select",
+        "label": "Control Type",
+        "key": "controlType",
+        "defaultValue": "select",
+        "placeholder": "Pick an options type",
+        "options": [
+          {
+            "label": "Select",
+            "value": "select"
+          },
+          {
+            "label": "Checkboxes",
+            "value": "checkbox"
+          },
+          {
+            "label": "Switches",
+            "value": "switch"
+          },
+          {
+            "label": "Order List",
+            "value": "list"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "label": "Direction",
+        "key": "direction",
+        "showInBar": true,
+        "barStyle": "buttons",
+        "dependsOn": {
+          "setting": "controlType",
+          "value": "select",
+          "invert": true
+        },
+        "options": [
+          {
+            "label": "Column",
+            "value": "column",
+            "barIcon": "ArrowDown",
+            "barTitle": "Column layout"
+          },
+          {
+            "label": "Row",
+            "value": "row",
+            "barIcon": "ArrowRight",
+            "barTitle": "Row layout"
+          }
+        ],
+        "defaultValue": "column"
+      },
+      {
         "section": true,
         "name": "Data Settings",
         "dependsOn": { "setting": "optionsSource", "value": "data" },
         "settings": [
-          {
-            "type": "boolean",
-            "key": "fullTable",
-            "label": "Super Table",
-            "resetOn": ["optionsSource", "controlType"],
-            "dependsOn": { "setting": "controlType", "value": "select" },
-            "defaultValue": false
-          },
           {
             "type": "dataSource",
             "label": "Data",
@@ -191,49 +180,12 @@
             "label": "Value column",
             "key": "valueColumn",
             "resetOn": ["datasource", "optionsSource"],
-            "dependsOn": { "setting": "optionsSource", "value": "data" },
-            "required": true
+            "defaultValue": "_id"
           },
           {
             "type": "field",
             "label": "Label column",
             "key": "labelColumn",
-            "resetOn": "datasource",
-            "dependsOn": { "setting": "fullTable", "value": false }
-          },
-          {
-            "type": "boolean",
-            "key": "prefetch",
-            "label": "Prefetch",
-            "dependsOn": {
-              "setting": "fullTable",
-              "value": true,
-              "invert": true
-            },
-            "defaultValue": true
-          },
-          {
-            "type": "boolean",
-            "key": "cache",
-            "label": "Cache",
-            "dependsOn": {
-              "setting": "fullTable",
-              "value": true,
-              "invert": true
-            },
-            "defaultValue": true
-          }
-        ]
-      },
-      {
-        "section": true,
-        "dependsOn": { "setting": "fullTable", "value": true },
-        "name": "Super Table Options",
-        "settings": [
-          {
-            "type": "columns",
-            "label": "Columns",
-            "key": "columnList",
             "resetOn": "datasource"
           }
         ]
@@ -246,6 +198,12 @@
           "setting": "optionsSource",
           "value": "custom"
         }
+      },
+      {
+        "type": "boolean",
+        "label": "Grab Focus",
+        "key": "autofocus",
+        "defaultValue": false
       },
       {
         "type": "boolean",
@@ -289,21 +247,120 @@
         }
       },
       {
+        "type": "boolean",
+        "label": "Reorder Only",
+        "key": "reorderOnly",
+        "defaultValue": false,
+        "dependsOn": {
+          "setting": "controlType",
+          "value": "list"
+        }
+      },
+      {
         "type": "icon",
         "key": "icon",
         "label": "Inline Icon",
         "dependsOn": { "setting": "controlType", "value": "select" }
       },
       {
-        "type": "boolean",
-        "key": "customButtons",
-        "label": "Add Buttons"
-      },
-      {
         "type": "buttonConfiguration",
         "key": "buttons",
-        "nested": true,
-        "dependsOn": "customButtons"
+        "label": "Butttons",
+        "nested": true
+      },
+      {
+        "tag": "style",
+        "type": "select",
+        "label": "Field Mode",
+        "key": "role",
+        "defaultValue": "formInput",
+        "options": [
+          {
+            "label": "Form Input",
+            "value": "formInput"
+          },
+          {
+            "label": "Inline Input",
+            "value": "inlineInput"
+          }
+        ]
+      },
+      {
+        "tag": "style",
+        "type": "select",
+        "label": "Label Position",
+        "key": "labelPosition",
+        "showInBar": true,
+        "barStyle": "buttons",
+        "defaultValue": "fieldGroup",
+        "options": [
+          {
+            "label": "Disabled",
+            "value": false,
+            "barIcon": "Cancel",
+            "barTitle": "Disabled"
+          },
+          {
+            "label": "Auto",
+            "value": "fieldGroup",
+            "barIcon": "Group",
+            "barTitle": "Field Group"
+          },
+          {
+            "label": "Above",
+            "value": "above",
+            "barIcon": "MarginTop",
+            "barTitle": "Above"
+          },
+          {
+            "label": "Left",
+            "value": "left",
+            "barIcon": "MarginLeft",
+            "barTitle": "Left"
+          }
+        ]
+      },
+      {
+        "tag": "style",
+        "type": "select",
+        "label": "Layout",
+        "key": "span",
+        "defaultValue": 6,
+        "showInBar": true,
+        "barStyle": "buttons",
+        "options": [
+          {
+            "label": "3 columns",
+            "value": 2,
+            "barIcon": "ViewColumn",
+            "barTitle": "3 columns"
+          },
+          {
+            "label": "2 columns",
+            "value": 3,
+            "barIcon": "ColumnTwoA",
+            "barTitle": "2 columns"
+          },
+          {
+            "label": "1 column",
+            "value": 6,
+            "barIcon": "Stop",
+            "barTitle": "1 column"
+          },
+          {
+            "label": "Full Width",
+            "value": 12,
+            "barIcon": "Maximize",
+            "barTitle": "Full Width"
+          }
+        ]
+      },
+      {
+        "tag": "style",
+        "type": "boolean",
+        "key": "showDirty",
+        "label": "Show Dirty",
+        "defaultValue": false
       },
       {
         "tag": "style",
@@ -350,35 +407,6 @@
             "label": "text",
             "value": "text",
             "barIcon": "Text"
-          }
-        ]
-      },
-      {
-        "tag": "style",
-        "type": "select",
-        "label": "Layout",
-        "key": "span",
-        "defaultValue": 6,
-        "showInBar": true,
-        "barStyle": "buttons",
-        "options": [
-          {
-            "label": "1 column",
-            "value": 6,
-            "barIcon": "Stop",
-            "barTitle": "1 column"
-          },
-          {
-            "label": "2 columns",
-            "value": 3,
-            "barIcon": "ColumnTwoA",
-            "barTitle": "2 columns"
-          },
-          {
-            "label": "3 columns",
-            "value": 2,
-            "barIcon": "ViewColumn",
-            "barTitle": "3 columns"
           }
         ]
       }

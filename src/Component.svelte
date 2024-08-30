@@ -1,26 +1,29 @@
 <script>
   import { getContext, onDestroy } from "svelte";
   import CellOptions from "../../bb_super_components_shared/src/lib/SuperTableCells/CellOptions.svelte";
+  import SuperButton from "../../bb_super_components_shared/src/lib/SuperButton/SuperButton.svelte";
   import "../../bb_super_components_shared/src/lib/SuperFieldsCommon.css";
 
-  const { styleable, Provider, Block, BlockComponent } = getContext("sdk");
+  const { styleable, enrichButtonActions } = getContext("sdk");
   const component = getContext("component");
+  const allContext = getContext("context");
 
   const formContext = getContext("form");
   const formStepContext = getContext("form-step");
-  const labelPos = getContext("field-group");
+  const groupLabelPosition = getContext("field-group");
   const labelWidth = getContext("field-group-label-width");
+  const groupColumns = getContext("field-group-columns");
   const groupDisabled = getContext("field-group-disabled");
   const formApi = formContext?.formApi;
 
   export let field;
   export let controlType = "select";
+  export let role = "formInput";
 
-  export let customButtons;
   export let buttons = [];
   export let buttonsQuiet = true;
 
-  export let fieldLabel;
+  export let label;
   export let span = 6;
   export let placeholder = "Choose Options";
   export let defaultValue;
@@ -29,12 +32,15 @@
   export let validation;
   export let onChange;
   export let debounced;
-  export let debounceDelay;
+  export let debounceDelay = 750;
   export let autocomplete;
 
   export let icon;
+  export let labelPosition = "fieldGroup";
+  export let showDirty;
+  export let autofocus;
 
-  export let optionsSource;
+  export let optionsSource = "schema";
   export let datasource;
   export let limit;
   export let sortColumn;
@@ -44,15 +50,14 @@
   export let cache;
   export let valueColumn;
   export let labelColumn;
-  export let columnList;
   export let colorColumn;
   export let iconColumn;
   export let customOptions;
-  export let optionsArrangement;
+  export let reorderOnly;
   export let useOptionColors;
   export let optionsIcon;
   export let optionsViewMode;
-  export let fullTable;
+  export let direction;
 
   let formField;
   let formStep;
@@ -63,7 +68,11 @@
   let cellState;
 
   $: formStep = formStepContext ? $formStepContext || 1 : 1;
-  $: label = fieldLabel || fieldSchema?.name;
+  $: label = label || fieldSchema?.name;
+  $: labelPos =
+    groupLabelPosition && labelPosition == "fieldGroup"
+      ? groupLabelPosition
+      : labelPosition;
 
   $: formField = formApi?.registerField(
     field,
@@ -81,15 +90,16 @@
     fieldSchema = value?.fieldSchema;
   });
 
-  $: value = fieldState?.value ? fieldState.value : defaultValue;
+  $: value = fieldState?.value;
 
   $: $component.styles = {
     ...$component.styles,
     normal: {
       ...$component.styles.normal,
       "flex-direction": labelPos == "left" ? "row" : "column",
-      gap: labelPos == "left" ? "0.85rem" : "0rem",
-      "grid-column": labelPos ? "span " + span : null,
+      "align-items": "stretch",
+      gap: labelPos == "left" ? "0.5rem" : "0rem",
+      "grid-column": span < 7 ? "span " + span : "span " + groupColumns * 6,
       "--label-width":
         labelPos == "left" ? (labelWidth ? labelWidth : "6rem") : "auto",
     },
@@ -105,7 +115,7 @@
     autocomplete,
     error: fieldState.error,
     controlType,
-    optionsArrangement,
+    direction,
     optionsSource,
     datasource,
     limit,
@@ -116,16 +126,16 @@
     cache,
     valueColumn,
     labelColumn,
-    fullTable,
-    columnList,
     colorColumn,
     iconColumn,
     useOptionColors,
     optionsIcon,
     optionsViewMode,
     customOptions,
-    role: "formInput",
+    role,
     icon,
+    showDirty,
+    reorderOnly,
   };
 
   onDestroy(() => {
@@ -136,53 +146,54 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-<Block>
-  <div class="superField" use:styleable={$component.styles}>
-    {#if label}
-      <label for="superCell" class="superlabel" class:left={labelPos == "left"}>
-        {label}
-        {#if fieldState.error}
-          <div class="error" class:left={labelPos == "left"}>
-            <span>{fieldState.error}</span>
-          </div>
-        {/if}
-      </label>
-    {/if}
-
-    <div class="inline-cells">
-      <CellOptions
-        bind:cellState
-        {cellOptions}
-        {fieldSchema}
-        value={fieldState.value}
-        multi
-        on:change={(e) => {
-          onChange?.({ value: e.detail });
-          fieldApi?.setValue([...e.detail]);
-        }}
-        on:blur={cellState.lostFocus}
-      />
-
-      {#if customButtons && buttons?.length}
-        <div
-          class="spectrum-ActionGroup spectrum-ActionGroup--compact spectrum-ActionGroup--sizeM"
-          class:spectrum-ActionGroup--quiet={buttonsQuiet}
-        >
-          <Provider data={{ value: fieldState.value }}>
-            {#each buttons as { text, onClick }}
-              <BlockComponent
-                type="plugin/bb-component-SuperButton"
-                props={{
-                  size: "M",
-                  disabled,
-                  text,
-                  onClick,
-                }}
-              ></BlockComponent>
-            {/each}
-          </Provider>
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<div
+  class="superField"
+  class:multirow={controlType != "select"}
+  use:styleable={$component.styles}
+>
+  {#if label && labelPos}
+    <label
+      for="superCell"
+      class="superlabel"
+      class:left={labelPos == "left"}
+      on:mousedown|preventDefault={cellState.focus}
+    >
+      {label}
+      {#if fieldState.error}
+        <div class="error" class:left={labelPos == "left"}>
+          <span>{fieldState.error}</span>
         </div>
       {/if}
-    </div>
+    </label>
+  {/if}
+
+  <div class="inline-cells">
+    <CellOptions
+      bind:cellState
+      {cellOptions}
+      {fieldSchema}
+      {value}
+      {autofocus}
+      multi
+      on:change={(e) => {
+        onChange?.({ value: e.detail });
+        fieldApi?.setValue([...e.detail]);
+      }}
+    />
+
+    {#if buttons?.length}
+      {#each buttons as { text, onClick, quiet, disabled, type }}
+        <SuperButton
+          quiet={buttonsQuiet || quiet}
+          {disabled}
+          size="M"
+          {text}
+          onClick={enrichButtonActions(onClick, $allContext)}
+          emphasized
+          selected={type == "cta"}
+        />
+      {/each}
+    {/if}
   </div>
-</Block>
+</div>
