@@ -266,6 +266,11 @@
         "type": "buttonConfiguration",
         "key": "buttons",
         "label": "Butttons",
+        "dependsOn": {
+          "setting": "controlType",
+          "value": "list",
+          "invert": true
+        },
         "nested": true
       },
       {

@@ -50,8 +50,6 @@
   export let cache;
   export let valueColumn;
   export let labelColumn;
-  export let colorColumn;
-  export let iconColumn;
   export let customOptions;
   export let reorderOnly;
   export let useOptionColors;
@@ -68,7 +66,7 @@
   let cellState;
 
   $: formStep = formStepContext ? $formStepContext || 1 : 1;
-  $: label = label || fieldSchema?.name;
+  $: label = label || field;
   $: labelPos =
     groupLabelPosition && labelPosition == "fieldGroup"
       ? groupLabelPosition
@@ -126,8 +124,6 @@
     cache,
     valueColumn,
     labelColumn,
-    colorColumn,
-    iconColumn,
     useOptionColors,
     optionsIcon,
     optionsViewMode,
@@ -147,11 +143,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-<div
-  class="superField"
-  class:multirow={controlType != "select"}
-  use:styleable={$component.styles}
->
+<div class="superField" use:styleable={$component.styles}>
   {#if label && labelPos}
     <label
       for="superCell"
