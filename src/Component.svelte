@@ -1,7 +1,9 @@
 <script>
   import { getContext, onDestroy } from "svelte";
   import CellOptions from "../../bb_super_components_shared/src/lib/SuperTableCells/CellOptions.svelte";
+  import CellOptionsAdvanced from "../../bb_super_components_shared/src/lib/SuperTableCells/CellOptionsAdvanced.svelte";
   import SuperButton from "../../bb_super_components_shared/src/lib/SuperButton/SuperButton.svelte";
+  import "../../bb_super_components_shared/src/lib/SuperTableCells/CellCommon.css";
   import "../../bb_super_components_shared/src/lib/SuperFieldsCommon.css";
 
   const { styleable, enrichButtonActions } = getContext("sdk");
@@ -21,7 +23,6 @@
   export let role = "formInput";
 
   export let buttons = [];
-  export let buttonsQuiet = true;
 
   export let label;
   export let span = 6;
@@ -34,6 +35,7 @@
   export let debounced;
   export let debounceDelay = 750;
   export let autocomplete;
+  export let helpText;
 
   export let icon;
   export let labelPosition = "fieldGroup";
@@ -46,14 +48,10 @@
   export let sortColumn;
   export let sortOrder;
   export let filter;
-  export let prefetch;
-  export let cache;
   export let valueColumn;
   export let labelColumn;
   export let customOptions;
   export let reorderOnly;
-  export let useOptionColors;
-  export let optionsIcon;
   export let optionsViewMode;
   export let direction;
 
@@ -63,10 +61,9 @@
   let fieldApi;
   let fieldSchema;
   let value;
-  let cellState;
+  let showHelp;
 
   $: formStep = formStepContext ? $formStepContext || 1 : 1;
-  $: label = label || field;
   $: labelPos =
     groupLabelPosition && labelPosition == "fieldGroup"
       ? groupLabelPosition
@@ -120,12 +117,8 @@
     sortColumn,
     sortOrder,
     filter,
-    prefetch,
-    cache,
     valueColumn,
     labelColumn,
-    useOptionColors,
-    optionsIcon,
     optionsViewMode,
     customOptions,
     role,
@@ -145,47 +138,70 @@
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <div class="superField" use:styleable={$component.styles}>
   {#if label && labelPos}
-    <label
-      for="superCell"
-      class="superlabel"
-      class:left={labelPos == "left"}
-      on:mousedown|preventDefault={cellState.focus}
-    >
-      {label}
+    <label for="superCell" class="superlabel" class:left={labelPos == "left"}>
+      {#if helpText && labelPos != "left"}
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <i
+          class={"ri-question-line"}
+          on:mouseenter={() => (showHelp = true)}
+          on:mouseleave={() => (showHelp = false)}
+        />
+      {/if}
+      <span>
+        {#if showHelp && helpText}
+          {helpText}
+        {:else}
+          {label}
+        {/if}
+      </span>
       {#if fieldState.error}
         <div class="error" class:left={labelPos == "left"}>
-          <span>{fieldState.error}</span>
+          {fieldState.error}
         </div>
       {/if}
     </label>
   {/if}
 
   <div class="inline-cells">
-    <CellOptions
-      bind:cellState
-      {cellOptions}
-      {fieldSchema}
-      {value}
-      {autofocus}
-      multi
-      on:change={(e) => {
-        onChange?.({ value: e.detail });
-        fieldApi?.setValue([...e.detail]);
-      }}
-    />
+    {#if controlType == "select"}
+      <CellOptions
+        {cellOptions}
+        {fieldSchema}
+        {value}
+        {autofocus}
+        multi
+        on:change={(e) => {
+          onChange?.({ value: e.detail });
+          fieldApi?.setValue([...e.detail]);
+        }}
+      />
+    {:else}
+      <CellOptionsAdvanced
+        {cellOptions}
+        {fieldSchema}
+        {value}
+        {autofocus}
+        multi
+        on:change={(e) => {
+          onChange?.({ value: e.detail });
+          fieldApi?.setValue([...e.detail]);
+        }}
+      />
+    {/if}
 
     {#if buttons?.length}
-      {#each buttons as { text, onClick, quiet, disabled, type }}
-        <SuperButton
-          quiet={buttonsQuiet || quiet}
-          {disabled}
-          size="M"
-          {text}
-          onClick={enrichButtonActions(onClick, $allContext)}
-          emphasized
-          selected={type == "cta"}
-        />
-      {/each}
+      <div class="inline-buttons" class:vertical={controlType != "select"}>
+        {#each buttons as { text, onClick, quiet, disabled, type, size }}
+          <SuperButton
+            {quiet}
+            {disabled}
+            {size}
+            {type}
+            {text}
+            on:click={enrichButtonActions(onClick, $allContext)({ value })}
+          />
+        {/each}
+      </div>
     {/if}
   </div>
 </div>
