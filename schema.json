@@ -7,20 +7,6 @@
     "description": "An Option Input Field component for Budibase",
     "icon": "MultipleCheck",
     "requiredAncestors": ["form"],
-    "block": true,
-    "ejectable": false,
-    "context": [
-      {
-        "type": "static",
-        "values": [
-          {
-            "label": "Value",
-            "key": "value",
-            "type": "array"
-          }
-        ]
-      }
-    ],
     "settings": [
       {
         "type": "field/array",
@@ -108,7 +94,7 @@
             "value": "switch"
           },
           {
-            "label": "Order List",
+            "label": "Ordered List",
             "value": "list"
           }
         ]
@@ -212,14 +198,6 @@
         "defaultValue": false
       },
       {
-        "type": "number",
-        "label": "Debounce Delay (ms)",
-        "key": "debounceDelay",
-        "minValue": "200",
-        "defaultValue": 750,
-        "dependsOn": "debounced"
-      },
-      {
         "type": "boolean",
         "label": "Autocomplete",
         "key": "autocomplete",
@@ -265,13 +243,19 @@
       {
         "type": "buttonConfiguration",
         "key": "buttons",
-        "label": "Butttons",
+        "wide": true,
         "dependsOn": {
           "setting": "controlType",
           "value": "list",
           "invert": true
         },
-        "nested": true
+        "nested": true,
+        "context": [
+          {
+            "key": "value",
+            "label": "value"
+          }
+        ]
       },
       {
         "tag": "style",
@@ -362,47 +346,18 @@
       },
       {
         "tag": "style",
-        "type": "boolean",
-        "key": "showDirty",
-        "label": "Show Dirty",
-        "defaultValue": false
-      },
-      {
-        "tag": "style",
-        "type": "boolean",
-        "key": "useOptionColors",
-        "label": "Option Colors",
-        "defaultValue": false
-      },
-      {
-        "tag": "style",
-        "type": "text",
-        "label": "Option Color",
-        "key": "colorTemplate",
-        "dependsOn": "useOptionColors"
-      },
-      {
-        "tag": "style",
-        "type": "icon",
-        "key": "optionsIcon",
-        "label": "Options Icon"
-      },
-      {
-        "tag": "style",
-        "type": "text",
-        "label": "Option Icon",
-        "key": "iconTemplate"
-      },
-      {
-        "tag": "style",
         "type": "select",
         "label": "Options Mode",
         "key": "optionsViewMode",
         "defaultValue": "text",
         "showInBar": true,
         "barStyle": "buttons",
-        "dependsOn": { "setting": "controlType", "value": "select" },
         "options": [
+          {
+            "label": "Text w Color",
+            "value": "colorText",
+            "barIcon": "ColorPalette"
+          },
           {
             "label": "Pills",
             "value": "pills",
@@ -414,6 +369,13 @@
             "barIcon": "Text"
           }
         ]
+      },
+      {
+        "tag": "style",
+        "type": "boolean",
+        "key": "showDirty",
+        "label": "Show Dirty",
+        "defaultValue": false
       }
     ]
   }
