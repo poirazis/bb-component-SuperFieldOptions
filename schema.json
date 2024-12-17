@@ -6,7 +6,19 @@
     "friendlyName": "Super Field - Options",
     "description": "An Option Input Field component for Budibase",
     "icon": "MultipleCheck",
-    "requiredAncestors": ["form"],
+    "context": [
+      {
+        "type": "static",
+        "scope": "global",
+        "values": [
+          {
+            "key": "value",
+            "label": "value",
+            "type": "array"
+          }
+        ]
+      }
+    ],
     "settings": [
       {
         "type": "field/array",
@@ -18,7 +30,8 @@
         "type": "text",
         "label": "Label",
         "key": "label",
-        "placeholder": "Field Name"
+        "placeholder": "Field Name",
+        "resetOn": "field"
       },
       {
         "type": "text",
@@ -84,6 +97,10 @@
           {
             "label": "Select",
             "value": "select"
+          },
+          {
+            "label": "Input Select",
+            "value": "inputSelect"
           },
           {
             "label": "Checkboxes",
@@ -199,16 +216,6 @@
       },
       {
         "type": "boolean",
-        "label": "Autocomplete",
-        "key": "autocomplete",
-        "defaultValue": false,
-        "dependsOn": {
-          "setting": "controlType",
-          "value": "select"
-        }
-      },
-      {
-        "type": "boolean",
         "label": "Disabled",
         "key": "disabled",
         "defaultValue": false
@@ -237,8 +244,7 @@
       {
         "type": "icon",
         "key": "icon",
-        "label": "Inline Icon",
-        "dependsOn": { "setting": "controlType", "value": "select" }
+        "label": "Inline Icon"
       },
       {
         "type": "buttonConfiguration",
