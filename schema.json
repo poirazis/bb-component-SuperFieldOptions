@@ -1,0 +1,388 @@
+{
+  "type": "component",
+  "metadata": {},
+  "schema": {
+    "name": "bb-component-SuperFieldOptions",
+    "friendlyName": "Super Field - Options",
+    "description": "An Option Input Field component for Budibase",
+    "icon": "MultipleCheck",
+    "context": [
+      {
+        "type": "static",
+        "scope": "global",
+        "values": [
+          {
+            "key": "value",
+            "label": "value",
+            "type": "array"
+          }
+        ]
+      }
+    ],
+    "settings": [
+      {
+        "type": "field/array",
+        "label": "Field",
+        "key": "field",
+        "required": true
+      },
+      {
+        "type": "text",
+        "label": "Label",
+        "key": "label",
+        "placeholder": "Field Name",
+        "resetOn": "field"
+      },
+      {
+        "type": "text",
+        "label": "Placeholder",
+        "key": "placeholder",
+        "placeholder": "Choose Options"
+      },
+      {
+        "type": "text",
+        "label": "Default value",
+        "key": "defaultValue",
+        "supportsConditions": false
+      },
+      {
+        "type": "text",
+        "label": "Help text",
+        "key": "helpText"
+      },
+      {
+        "type": "validation/array",
+        "label": "Validation",
+        "key": "validation"
+      },
+      {
+        "type": "event",
+        "label": "On change",
+        "key": "onChange",
+        "context": [
+          {
+            "label": "Value",
+            "key": "value"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "label": "Options source",
+        "key": "optionsSource",
+        "defaultValue": "schema",
+        "placeholder": "Pick an options source",
+        "options": [
+          {
+            "label": "Schema",
+            "value": "schema"
+          },
+          {
+            "label": "Data",
+            "value": "data"
+          },
+          {
+            "label": "Custom",
+            "value": "custom"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "label": "Control Type",
+        "key": "controlType",
+        "defaultValue": "select",
+        "placeholder": "Pick an options type",
+        "options": [
+          {
+            "label": "Select",
+            "value": "select"
+          },
+          {
+            "label": "Input Select",
+            "value": "inputSelect"
+          },
+          {
+            "label": "Checkboxes",
+            "value": "checkbox"
+          },
+          {
+            "label": "Switches",
+            "value": "switch"
+          },
+          {
+            "label": "Ordered List",
+            "value": "list"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "label": "Direction",
+        "key": "direction",
+        "showInBar": true,
+        "barStyle": "buttons",
+        "dependsOn": {
+          "setting": "controlType",
+          "value": "select",
+          "invert": true
+        },
+        "options": [
+          {
+            "label": "Column",
+            "value": "column",
+            "barIcon": "ArrowDown",
+            "barTitle": "Column layout"
+          },
+          {
+            "label": "Row",
+            "value": "row",
+            "barIcon": "ArrowRight",
+            "barTitle": "Row layout"
+          }
+        ],
+        "defaultValue": "column"
+      },
+      {
+        "section": true,
+        "name": "Data Settings",
+        "dependsOn": { "setting": "optionsSource", "value": "data" },
+        "settings": [
+          {
+            "type": "dataSource",
+            "label": "Data",
+            "key": "datasource",
+            "resetOn": "optionsSource"
+          },
+          {
+            "type": "filter",
+            "label": "Filtering",
+            "key": "filter"
+          },
+          {
+            "type": "field/sortable",
+            "label": "Sort column",
+            "key": "sortColumn",
+            "placeholder": "None"
+          },
+          {
+            "type": "select",
+            "label": "Sort order",
+            "key": "sortOrder",
+            "options": ["Ascending", "Descending"],
+            "defaultValue": "Ascending"
+          },
+          {
+            "type": "number",
+            "label": "Limit",
+            "key": "limit",
+            "defaultValue": 10
+          },
+          {
+            "type": "field",
+            "label": "Value column",
+            "key": "valueColumn",
+            "resetOn": ["datasource", "optionsSource"],
+            "defaultValue": "_id"
+          },
+          {
+            "type": "field",
+            "label": "Label column",
+            "key": "labelColumn",
+            "resetOn": "datasource"
+          }
+        ]
+      },
+      {
+        "type": "options",
+        "key": "customOptions",
+        "label": "Custom Options",
+        "dependsOn": {
+          "setting": "optionsSource",
+          "value": "custom"
+        }
+      },
+      {
+        "type": "boolean",
+        "label": "Grab Focus",
+        "key": "autofocus",
+        "defaultValue": false
+      },
+      {
+        "type": "boolean",
+        "label": "Debounced",
+        "key": "debounced",
+        "defaultValue": false
+      },
+      {
+        "type": "boolean",
+        "label": "Disabled",
+        "key": "disabled",
+        "defaultValue": false
+      },
+      {
+        "type": "boolean",
+        "label": "Read only",
+        "key": "readonly",
+        "defaultValue": false,
+        "dependsOn": {
+          "setting": "disabled",
+          "value": true,
+          "invert": true
+        }
+      },
+      {
+        "type": "boolean",
+        "label": "Reorder Only",
+        "key": "reorderOnly",
+        "defaultValue": false,
+        "dependsOn": {
+          "setting": "controlType",
+          "value": "list"
+        }
+      },
+      {
+        "type": "icon",
+        "key": "icon",
+        "label": "Inline Icon"
+      },
+      {
+        "type": "buttonConfiguration",
+        "key": "buttons",
+        "wide": true,
+        "dependsOn": {
+          "setting": "controlType",
+          "value": "list",
+          "invert": true
+        },
+        "nested": true,
+        "context": [
+          {
+            "key": "value",
+            "label": "value"
+          }
+        ]
+      },
+      {
+        "tag": "style",
+        "type": "select",
+        "label": "Field Mode",
+        "key": "role",
+        "defaultValue": "formInput",
+        "options": [
+          {
+            "label": "Form Input",
+            "value": "formInput"
+          },
+          {
+            "label": "Inline Input",
+            "value": "inlineInput"
+          }
+        ]
+      },
+      {
+        "tag": "style",
+        "type": "select",
+        "label": "Label Position",
+        "key": "labelPosition",
+        "showInBar": true,
+        "barStyle": "buttons",
+        "defaultValue": "fieldGroup",
+        "options": [
+          {
+            "label": "Disabled",
+            "value": false,
+            "barIcon": "Cancel",
+            "barTitle": "Disabled"
+          },
+          {
+            "label": "Auto",
+            "value": "fieldGroup",
+            "barIcon": "Group",
+            "barTitle": "Field Group"
+          },
+          {
+            "label": "Above",
+            "value": "above",
+            "barIcon": "MarginTop",
+            "barTitle": "Above"
+          },
+          {
+            "label": "Left",
+            "value": "left",
+            "barIcon": "MarginLeft",
+            "barTitle": "Left"
+          }
+        ]
+      },
+      {
+        "tag": "style",
+        "type": "select",
+        "label": "Layout",
+        "key": "span",
+        "defaultValue": 6,
+        "showInBar": true,
+        "barStyle": "buttons",
+        "options": [
+          {
+            "label": "3 columns",
+            "value": 2,
+            "barIcon": "ViewColumn",
+            "barTitle": "3 columns"
+          },
+          {
+            "label": "2 columns",
+            "value": 3,
+            "barIcon": "ColumnTwoA",
+            "barTitle": "2 columns"
+          },
+          {
+            "label": "1 column",
+            "value": 6,
+            "barIcon": "Stop",
+            "barTitle": "1 column"
+          },
+          {
+            "label": "Full Width",
+            "value": 12,
+            "barIcon": "Maximize",
+            "barTitle": "Full Width"
+          }
+        ]
+      },
+      {
+        "tag": "style",
+        "type": "select",
+        "label": "Options Mode",
+        "key": "optionsViewMode",
+        "defaultValue": "text",
+        "showInBar": true,
+        "barStyle": "buttons",
+        "options": [
+          {
+            "label": "Text w Color",
+            "value": "colorText",
+            "barIcon": "ColorPalette"
+          },
+          {
+            "label": "Pills",
+            "value": "pills",
+            "barIcon": "Button"
+          },
+          {
+            "label": "text",
+            "value": "text",
+            "barIcon": "Text"
+          }
+        ]
+      },
+      {
+        "tag": "style",
+        "type": "boolean",
+        "key": "showDirty",
+        "label": "Show Dirty",
+        "defaultValue": false
+      }
+    ]
+  }
+}
