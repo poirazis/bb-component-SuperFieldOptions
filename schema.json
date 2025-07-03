@@ -24,14 +24,14 @@
         "type": "field/array",
         "label": "Field",
         "key": "field",
-        "required": true
+        "defaultValue": "Options Field"
       },
       {
         "type": "text",
         "label": "Label",
         "key": "label",
-        "placeholder": "Field Name",
-        "resetOn": "field"
+        "defaultValue": "Options Field",
+        "placeholder": "Field Name"
       },
       {
         "type": "text",
@@ -190,6 +190,18 @@
             "label": "Label column",
             "key": "labelColumn",
             "resetOn": "datasource"
+          },
+          {
+            "type": "field",
+            "label": "Icon column",
+            "key": "iconColumn",
+            "resetOn": "datasource"
+          },
+          {
+            "type": "field",
+            "label": "Color column",
+            "key": "colorColumn",
+            "resetOn": "datasource"
           }
         ]
       },
@@ -229,6 +241,16 @@
           "setting": "disabled",
           "value": true,
           "invert": true
+        }
+      },
+      {
+        "type": "boolean",
+        "key": "toggleAll",
+        "label": "Toggle All",
+        "defaultValue": false,
+        "dependsOn": {
+          "setting": "controlType",
+          "value": "switch"
         }
       },
       {
