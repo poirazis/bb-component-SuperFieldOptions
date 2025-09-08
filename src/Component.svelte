@@ -1,13 +1,20 @@
 <script>
   import { getContext, onDestroy } from "svelte";
-  import CellOptions from "../../bb_super_components_shared/src/lib/SuperTableCells/CellOptions.svelte";
-  import CellOptionsAdvanced from "../../bb_super_components_shared/src/lib/SuperTableCells/CellOptionsAdvanced.svelte";
-  import SuperButton from "../../bb_super_components_shared/src/lib/SuperButton/SuperButton.svelte";
-  import SuperFieldLabel from "../../bb_super_components_shared/src/lib/SuperFieldLabel/SuperFieldLabel.svelte";
-  import "../../bb_super_components_shared/src/lib/SuperTableCells/CellCommon.css";
-  import "../../bb_super_components_shared/src/lib/SuperFieldsCommon.css";
+  import {
+    CellOptions,
+    CellOptionsAdvanced,
+    SuperButton,
+    SuperField,
+    SuperFieldOptions,
+  } from "@poirazis/supercomponents-shared";
 
-  const { styleable, enrichButtonActions, Provider } = getContext("sdk");
+  const {
+    styleable,
+    enrichButtonActions,
+    Provider,
+    createValidatorFromConstraints,
+    builderStore,
+  } = getContext("sdk");
   const component = getContext("component");
   const allContext = getContext("context");
 
@@ -19,22 +26,23 @@
   const groupDisabled = getContext("field-group-disabled");
   const formApi = formContext?.formApi;
 
-  export let field;
+  export let field = "Options Field";
   export let controlType = "select";
   export let role = "formInput";
 
   export let buttons = [];
 
-  export let label;
+  export let label = "Options Field";
   export let span = 6;
   export let placeholder = "Choose Options";
   export let defaultValue;
   export let disabled;
   export let readonly;
   export let validation;
+  export let invisible = false;
   export let onChange;
   export let debounced;
-  export let debounceDelay = 750;
+  export let debounceDelay = 250;
   export let helpText;
 
   export let icon;
@@ -50,10 +58,13 @@
   export let filter;
   export let valueColumn;
   export let labelColumn;
+  export let iconColumn;
+  export let colorColumn;
   export let customOptions;
   export let reorderOnly;
   export let optionsViewMode;
   export let direction;
+  export let toggleAll;
 
   let formField;
   let formStep;
@@ -87,12 +98,18 @@
   });
 
   $: value = fieldState?.value;
+  $: error = fieldState?.error;
 
   $: $component.styles = {
     ...$component.styles,
     normal: {
       ...$component.styles.normal,
-      "grid-column": span < 7 ? "span " + span : "span " + groupColumns * 6,
+      display:
+        invisible && !$builderStore.inBuilder
+          ? "none"
+          : $component.styles.normal.display,
+      opacity: invisible && $builderStore.inBuilder ? 0.6 : 1,
+      "grid-column": groupColumns ? `span ${span}` : "span 1",
     },
   };
 
@@ -113,12 +130,21 @@
     filter,
     valueColumn,
     labelColumn,
+    iconColumn,
+    colorColumn,
     optionsViewMode,
     customOptions,
     role,
     icon,
     showDirty,
     reorderOnly,
+    toggleAll,
+  };
+
+  const handleChange = async (newValue) => {
+    value = newValue;
+    fieldApi?.setValue(newValue);
+    await onChange?.({ value: newValue });
   };
 
   onDestroy(() => {
@@ -132,62 +158,49 @@
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <div use:styleable={$component.styles}>
   <Provider data={{ value }} />
-  <div
-    class="superField"
-    class:left-label={labelPos == "left"}
-    class:multirow={controlType != "select"}
+  <SuperField
+    {multirow}
+    {labelPos}
+    {labelWidth}
+    {field}
+    {label}
+    {error}
+    {helpText}
   >
-    <SuperFieldLabel
-      {labelPos}
-      {labelWidth}
-      {label}
-      {helpText}
-      error={fieldState?.error}
-    />
+    {#if controlType == "select" || controlType == "inputSelect"}
+      <CellOptions
+        {cellOptions}
+        {fieldSchema}
+        {value}
+        {autofocus}
+        multi={true}
+        on:change={(e) => handleChange(e.detail)}
+      />
+    {:else}
+      <CellOptionsAdvanced
+        {cellOptions}
+        {fieldSchema}
+        {value}
+        {autofocus}
+        label={labelPos ? null : label}
+        multi={true}
+        on:change={(e) => handleChange(e.detail)}
+      />
+    {/if}
 
-    <div class="inline-cells" class:multirow>
-      {#if controlType == "select" || controlType == "inputSelect"}
-        <CellOptions
-          {cellOptions}
-          {fieldSchema}
-          {value}
-          {autofocus}
-          multi
-          on:change={(e) => {
-            onChange?.({ value: e.detail });
-            value = e.detail;
-            fieldApi?.setValue([...e.detail]);
-          }}
-        />
-      {:else}
-        <CellOptionsAdvanced
-          {cellOptions}
-          {fieldSchema}
-          {value}
-          {autofocus}
-          multi
-          on:change={(e) => {
-            onChange?.({ value: e.detail });
-            value = e.detail;
-            fieldApi?.setValue([...e.detail]);
-          }}
-        />
-      {/if}
-
-      {#if buttons?.length && controlType != "list"}
-        <div class="inline-buttons" class:vertical={multirow}>
-          {#each buttons as { text, onClick, quiet, disabled, type, size }}
-            <SuperButton
-              {quiet}
-              {disabled}
-              {size}
-              {type}
-              {text}
-              on:click={enrichButtonActions(onClick, $allContext)({ value })}
-            />
-          {/each}
-        </div>
-      {/if}
-    </div>
-  </div>
+    {#if buttons?.length && controlType != "list"}
+      <div class="inline-buttons" class:vertical={multirow}>
+        {#each buttons as { text, onClick, quiet, disabled, type, size }}
+          <SuperButton
+            {quiet}
+            {disabled}
+            {size}
+            {type}
+            {text}
+            on:click={enrichButtonActions(onClick, $allContext)({ value })}
+          />
+        {/each}
+      </div>
+    {/if}
+  </SuperField>
 </div>

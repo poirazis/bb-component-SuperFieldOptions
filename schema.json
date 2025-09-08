@@ -24,14 +24,14 @@
         "type": "field/array",
         "label": "Field",
         "key": "field",
-        "required": true
+        "defaultValue": "Options Field"
       },
       {
         "type": "text",
         "label": "Label",
         "key": "label",
-        "placeholder": "Field Name",
-        "resetOn": "field"
+        "defaultValue": "Options Field",
+        "placeholder": "Field Name"
       },
       {
         "type": "text",
@@ -173,12 +173,6 @@
             "defaultValue": "Ascending"
           },
           {
-            "type": "number",
-            "label": "Limit",
-            "key": "limit",
-            "defaultValue": 10
-          },
-          {
             "type": "field",
             "label": "Value column",
             "key": "valueColumn",
@@ -189,6 +183,18 @@
             "type": "field",
             "label": "Label column",
             "key": "labelColumn",
+            "resetOn": "datasource"
+          },
+          {
+            "type": "field",
+            "label": "Icon column",
+            "key": "iconColumn",
+            "resetOn": "datasource"
+          },
+          {
+            "type": "field",
+            "label": "Color column",
+            "key": "colorColumn",
             "resetOn": "datasource"
           }
         ]
@@ -229,6 +235,22 @@
           "setting": "disabled",
           "value": true,
           "invert": true
+        }
+      },
+      {
+        "type": "boolean",
+        "key": "invisible",
+        "label": "Invisible",
+        "defaultValue": false
+      },
+      {
+        "type": "boolean",
+        "key": "toggleAll",
+        "label": "Toggle All",
+        "defaultValue": false,
+        "dependsOn": {
+          "setting": "controlType",
+          "value": "switch"
         }
       },
       {
@@ -317,38 +339,11 @@
       },
       {
         "tag": "style",
-        "type": "select",
-        "label": "Layout",
+        "type": "number",
+        "label": "Size",
         "key": "span",
         "defaultValue": 6,
-        "showInBar": true,
-        "barStyle": "buttons",
-        "options": [
-          {
-            "label": "3 columns",
-            "value": 2,
-            "barIcon": "ViewColumn",
-            "barTitle": "3 columns"
-          },
-          {
-            "label": "2 columns",
-            "value": 3,
-            "barIcon": "ColumnTwoA",
-            "barTitle": "2 columns"
-          },
-          {
-            "label": "1 column",
-            "value": 6,
-            "barIcon": "Stop",
-            "barTitle": "1 column"
-          },
-          {
-            "label": "Full Width",
-            "value": 12,
-            "barIcon": "Maximize",
-            "barTitle": "Full Width"
-          }
-        ]
+        "min": 2
       },
       {
         "tag": "style",
