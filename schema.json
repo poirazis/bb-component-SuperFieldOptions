@@ -173,12 +173,6 @@
             "defaultValue": "Ascending"
           },
           {
-            "type": "number",
-            "label": "Limit",
-            "key": "limit",
-            "defaultValue": 10
-          },
-          {
             "type": "field",
             "label": "Value column",
             "key": "valueColumn",
@@ -242,6 +236,12 @@
           "value": true,
           "invert": true
         }
+      },
+      {
+        "type": "boolean",
+        "key": "invisible",
+        "label": "Invisible",
+        "defaultValue": false
       },
       {
         "type": "boolean",
@@ -339,38 +339,11 @@
       },
       {
         "tag": "style",
-        "type": "select",
-        "label": "Layout",
+        "type": "number",
+        "label": "Size",
         "key": "span",
         "defaultValue": 6,
-        "showInBar": true,
-        "barStyle": "buttons",
-        "options": [
-          {
-            "label": "3 columns",
-            "value": 2,
-            "barIcon": "ViewColumn",
-            "barTitle": "3 columns"
-          },
-          {
-            "label": "2 columns",
-            "value": 3,
-            "barIcon": "ColumnTwoA",
-            "barTitle": "2 columns"
-          },
-          {
-            "label": "1 column",
-            "value": 6,
-            "barIcon": "Stop",
-            "barTitle": "1 column"
-          },
-          {
-            "label": "Full Width",
-            "value": 12,
-            "barIcon": "Maximize",
-            "barTitle": "Full Width"
-          }
-        ]
+        "min": 2
       },
       {
         "tag": "style",

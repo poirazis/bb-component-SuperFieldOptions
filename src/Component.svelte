@@ -5,6 +5,7 @@
     CellOptionsAdvanced,
     SuperButton,
     SuperField,
+    SuperFieldOptions,
   } from "@poirazis/supercomponents-shared";
 
   const {
@@ -12,6 +13,7 @@
     enrichButtonActions,
     Provider,
     createValidatorFromConstraints,
+    builderStore,
   } = getContext("sdk");
   const component = getContext("component");
   const allContext = getContext("context");
@@ -37,6 +39,7 @@
   export let disabled;
   export let readonly;
   export let validation;
+  export let invisible = false;
   export let onChange;
   export let debounced;
   export let debounceDelay = 250;
@@ -101,7 +104,12 @@
     ...$component.styles,
     normal: {
       ...$component.styles.normal,
-      "grid-column": span < 7 ? "span " + span : "span " + groupColumns * 6,
+      display:
+        invisible && !$builderStore.inBuilder
+          ? "none"
+          : $component.styles.normal.display,
+      opacity: invisible && $builderStore.inBuilder ? 0.6 : 1,
+      "grid-column": groupColumns ? `span ${span}` : "span 1",
     },
   };
 
