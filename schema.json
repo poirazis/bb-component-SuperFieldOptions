@@ -103,8 +103,8 @@
             "value": "inputSelect"
           },
           {
-            "label": "Checkboxes",
-            "value": "checkbox"
+            "label": "Buttons",
+            "value": "buttons"
           },
           {
             "label": "Switches",
@@ -274,16 +274,9 @@
         "wide": true,
         "dependsOn": {
           "setting": "controlType",
-          "value": "list",
-          "invert": true
+          "value": "select"
         },
-        "nested": true,
-        "context": [
-          {
-            "key": "value",
-            "label": "value"
-          }
-        ]
+        "nested": true
       },
       {
         "tag": "style",

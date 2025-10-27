@@ -7,13 +7,8 @@
     SuperField,
   } from "@poirazis/supercomponents-shared";
 
-  const {
-    styleable,
-    enrichButtonActions,
-    Provider,
-    createValidatorFromConstraints,
-    builderStore,
-  } = getContext("sdk");
+  const { styleable, enrichButtonActions, Provider, builderStore } =
+    getContext("sdk");
   const component = getContext("component");
   const allContext = getContext("context");
 
@@ -187,8 +182,8 @@
       />
     {/if}
 
-    {#if buttons?.length && controlType != "list"}
-      <div class="inline-buttons" class:vertical={multirow}>
+    {#if buttons?.length && controlType == "select"}
+      <div class="inline-buttons">
         {#each buttons as { text, onClick, quiet, disabled, type, size }}
           <SuperButton
             {quiet}
@@ -196,7 +191,7 @@
             {size}
             {type}
             {text}
-            on:click={enrichButtonActions(onClick, $allContext)({ value })}
+            onClick={enrichButtonActions(onClick, $allContext)}
           />
         {/each}
       </div>
