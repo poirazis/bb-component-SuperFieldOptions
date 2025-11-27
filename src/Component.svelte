@@ -32,6 +32,7 @@
   export let defaultValue;
   export let disabled;
   export let readonly;
+  export let autocomplete = true;
   export let validation;
   export let invisible = false;
   export let onChange;
@@ -111,6 +112,7 @@
   $: cellOptions = {
     disabled: disabled || groupDisabled || fieldState?.disabled,
     readonly: readonly || fieldState?.readonly,
+    autocomplete,
     debounce: debounced ? debounceDelay : false,
     placeholder,
     defaultValue,
@@ -162,27 +164,28 @@
     {error}
     {helpText}
   >
-    {#if controlType == "select" || controlType == "inputSelect"}
-      <CellOptions
-        {cellOptions}
-        {fieldSchema}
-        {value}
-        {autofocus}
-        multi={true}
-        on:change={(e) => handleChange(e.detail)}
-      />
-    {:else}
-      <CellOptionsAdvanced
-        {cellOptions}
-        {fieldSchema}
-        {value}
-        {autofocus}
-        label={labelPos ? null : label}
-        multi={true}
-        on:change={(e) => handleChange(e.detail)}
-      />
-    {/if}
-
+    {#key customOptions}
+      {#if controlType == "select" || controlType == "inputSelect"}
+        <CellOptions
+          {cellOptions}
+          {fieldSchema}
+          {value}
+          {autofocus}
+          multi={true}
+          on:change={(e) => handleChange(e.detail)}
+        />
+      {:else}
+        <CellOptionsAdvanced
+          {cellOptions}
+          {fieldSchema}
+          {value}
+          {autofocus}
+          label={labelPos ? null : label}
+          multi={true}
+          on:change={(e) => handleChange(e.detail)}
+        />
+      {/if}
+    {/key}
     {#if buttons?.length && controlType == "select"}
       <div class="inline-buttons">
         {#each buttons as { text, onClick, quiet, disabled, type, size }}
