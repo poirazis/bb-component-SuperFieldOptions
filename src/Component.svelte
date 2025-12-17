@@ -7,8 +7,13 @@
     SuperField,
   } from "@poirazis/supercomponents-shared";
 
-  const { styleable, enrichButtonActions, Provider, builderStore } =
-    getContext("sdk");
+  const {
+    styleable,
+    enrichButtonActions,
+    Provider,
+    builderStore,
+    processStringSync,
+  } = getContext("sdk");
   const component = getContext("component");
   const allContext = getContext("context");
 
@@ -32,7 +37,6 @@
   export let defaultValue;
   export let disabled;
   export let readonly;
-  export let autocomplete = true;
   export let validation;
   export let invisible = false;
   export let onChange;
@@ -47,7 +51,6 @@
 
   export let optionsSource = "schema";
   export let datasource;
-  export let limit;
   export let sortColumn;
   export let sortOrder;
   export let filter;
@@ -70,11 +73,10 @@
 
   $: multirow = controlType != "select" && controlType != "inputSelect";
   $: formStep = formStepContext ? $formStepContext || 1 : 1;
-  $: labelPos = field
-    ? groupLabelPosition && labelPosition == "fieldGroup"
+  $: labelPos =
+    groupLabelPosition !== undefined && labelPosition == "fieldGroup"
       ? groupLabelPosition
-      : labelPosition
-    : false;
+      : labelPosition;
 
   $: formField = formApi?.registerField(
     field,
@@ -112,7 +114,6 @@
   $: cellOptions = {
     disabled: disabled || groupDisabled || fieldState?.disabled,
     readonly: readonly || fieldState?.readonly,
-    autocomplete,
     debounce: debounced ? debounceDelay : false,
     placeholder,
     defaultValue,
@@ -121,7 +122,6 @@
     direction,
     optionsSource,
     datasource,
-    limit,
     sortColumn,
     sortOrder,
     filter,
@@ -132,7 +132,7 @@
     optionsViewMode,
     customOptions,
     role,
-    icon,
+    icon: icon ? "ph ph-" + icon : undefined,
     showDirty,
     reorderOnly,
     toggleAll,
@@ -141,7 +141,7 @@
   const handleChange = async (newValue) => {
     value = newValue;
     fieldApi?.setValue(newValue);
-    await onChange?.({ value: newValue });
+    await onChange?.();
   };
 
   onDestroy(() => {
@@ -188,13 +188,17 @@
     {/key}
     {#if buttons?.length && controlType == "select"}
       <div class="inline-buttons">
-        {#each buttons as { text, onClick, quiet, disabled, type, size }}
+        {#each buttons as { icon, onClick, ...rest }}
           <SuperButton
-            {quiet}
-            {disabled}
-            {size}
-            {type}
-            {text}
+            {...rest}
+            icon={"ph ph-" + icon}
+            disabled={processStringSync(
+              rest.disabledTemplate ?? "",
+              $allContext
+            ) === true ||
+              disabled ||
+              groupDisabled ||
+              fieldState?.disabled}
             onClick={enrichButtonActions(onClick, $allContext)}
           />
         {/each}

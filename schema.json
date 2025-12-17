@@ -58,13 +58,7 @@
       {
         "type": "event",
         "label": "On change",
-        "key": "onChange",
-        "context": [
-          {
-            "label": "Value",
-            "key": "value"
-          }
-        ]
+        "key": "onChange"
       },
       {
         "type": "select",
@@ -239,18 +233,6 @@
       },
       {
         "type": "boolean",
-        "key": "autocomplete",
-        "label": "Searchable",
-        "defaultValue": true
-      },
-      {
-        "type": "boolean",
-        "key": "invisible",
-        "label": "Invisible",
-        "defaultValue": false
-      },
-      {
-        "type": "boolean",
         "key": "toggleAll",
         "label": "Toggle All",
         "defaultValue": false,
@@ -270,12 +252,13 @@
         }
       },
       {
-        "type": "icon",
+        "type": "phosphorIcon",
         "key": "icon",
         "label": "Inline Icon"
       },
       {
-        "type": "buttonConfiguration",
+        "type": "componentConfiguration",
+        "componentType": "plugin/bb-component-SuperButton",
         "key": "buttons",
         "wide": true,
         "dependsOn": {
@@ -283,23 +266,6 @@
           "value": "select"
         },
         "nested": true
-      },
-      {
-        "tag": "style",
-        "type": "select",
-        "label": "Field Mode",
-        "key": "role",
-        "defaultValue": "formInput",
-        "options": [
-          {
-            "label": "Form Input",
-            "value": "formInput"
-          },
-          {
-            "label": "Inline Input",
-            "value": "inlineInput"
-          }
-        ]
       },
       {
         "tag": "style",
@@ -338,6 +304,23 @@
       },
       {
         "tag": "style",
+        "type": "select",
+        "label": "Field Mode",
+        "key": "role",
+        "defaultValue": "formInput",
+        "options": [
+          {
+            "label": "Form Input",
+            "value": "formInput"
+          },
+          {
+            "label": "Inline Input",
+            "value": "inlineInput"
+          }
+        ]
+      },
+      {
+        "tag": "style",
         "type": "number",
         "label": "Size",
         "key": "span",
@@ -351,22 +334,22 @@
         "key": "optionsViewMode",
         "defaultValue": "text",
         "showInBar": true,
-        "barStyle": "buttons",
+        "barStyle": "select",
         "options": [
           {
-            "label": "Text w Color",
+            "label": "Bullet and Text",
             "value": "colorText",
             "barIcon": "ColorPalette"
           },
           {
             "label": "Pills",
             "value": "pills",
-            "barIcon": "Button"
+            "barIcon": "Rectangle"
           },
           {
-            "label": "text",
+            "label": "Text",
             "value": "text",
-            "barIcon": "Text"
+            "barIcon": "text-t"
           }
         ]
       },
@@ -375,6 +358,13 @@
         "type": "boolean",
         "key": "showDirty",
         "label": "Show Dirty",
+        "defaultValue": false
+      },
+      {
+        "tag": "style",
+        "type": "boolean",
+        "key": "invisible",
+        "label": "Invisible",
         "defaultValue": false
       }
     ]
