@@ -1,6 +1,8 @@
 {
   "type": "component",
-  "metadata": {},
+  "metadata": {
+    "svelteMajor": 5
+  },
   "schema": {
     "name": "bb-component-SuperFieldOptions",
     "friendlyName": "Super Field - Options",
@@ -140,7 +142,10 @@
       {
         "section": true,
         "name": "Data Settings",
-        "dependsOn": { "setting": "optionsSource", "value": "data" },
+        "dependsOn": {
+          "setting": "optionsSource",
+          "value": "data"
+        },
         "settings": [
           {
             "type": "dataSource",
@@ -163,14 +168,20 @@
             "type": "select",
             "label": "Sort order",
             "key": "sortOrder",
-            "options": ["Ascending", "Descending"],
+            "options": [
+              "Ascending",
+              "Descending"
+            ],
             "defaultValue": "Ascending"
           },
           {
             "type": "field",
             "label": "Value column",
             "key": "valueColumn",
-            "resetOn": ["datasource", "optionsSource"],
+            "resetOn": [
+              "datasource",
+              "optionsSource"
+            ],
             "defaultValue": "_id"
           },
           {

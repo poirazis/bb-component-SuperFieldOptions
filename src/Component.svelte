@@ -138,10 +138,10 @@
     toggleAll,
   };
 
-  const handleChange = async (newValue) => {
+  const handleChange = (newValue) => {
     value = newValue;
     fieldApi?.setValue(newValue);
-    await onChange?.();
+    onChange?.();
   };
 
   onDestroy(() => {
