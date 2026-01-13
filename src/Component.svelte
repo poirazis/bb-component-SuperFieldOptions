@@ -5,15 +5,14 @@
     CellOptionsAdvanced,
     SuperButton,
     SuperField,
-    SuperFieldOptions,
   } from "@poirazis/supercomponents-shared";
 
   const {
     styleable,
     enrichButtonActions,
     Provider,
-    createValidatorFromConstraints,
     builderStore,
+    processStringSync,
   } = getContext("sdk");
   const component = getContext("component");
   const allContext = getContext("context");
@@ -52,7 +51,6 @@
 
   export let optionsSource = "schema";
   export let datasource;
-  export let limit;
   export let sortColumn;
   export let sortOrder;
   export let filter;
@@ -75,11 +73,10 @@
 
   $: multirow = controlType != "select" && controlType != "inputSelect";
   $: formStep = formStepContext ? $formStepContext || 1 : 1;
-  $: labelPos = field
-    ? groupLabelPosition && labelPosition == "fieldGroup"
+  $: labelPos =
+    groupLabelPosition !== undefined && labelPosition == "fieldGroup"
       ? groupLabelPosition
-      : labelPosition
-    : false;
+      : labelPosition;
 
   $: formField = formApi?.registerField(
     field,
@@ -110,6 +107,7 @@
           : $component.styles.normal.display,
       opacity: invisible && $builderStore.inBuilder ? 0.6 : 1,
       "grid-column": groupColumns ? `span ${span}` : "span 1",
+      overflow: "hidden",
     },
   };
 
@@ -124,7 +122,6 @@
     direction,
     optionsSource,
     datasource,
-    limit,
     sortColumn,
     sortOrder,
     filter,
@@ -135,16 +132,16 @@
     optionsViewMode,
     customOptions,
     role,
-    icon,
+    icon: icon ? "ph ph-" + icon : undefined,
     showDirty,
     reorderOnly,
     toggleAll,
   };
 
-  const handleChange = async (newValue) => {
+  const handleChange = (newValue) => {
     value = newValue;
     fieldApi?.setValue(newValue);
-    await onChange?.({ value: newValue });
+    onChange?.();
   };
 
   onDestroy(() => {
@@ -167,37 +164,42 @@
     {error}
     {helpText}
   >
-    {#if controlType == "select" || controlType == "inputSelect"}
-      <CellOptions
-        {cellOptions}
-        {fieldSchema}
-        {value}
-        {autofocus}
-        multi={true}
-        on:change={(e) => handleChange(e.detail)}
-      />
-    {:else}
-      <CellOptionsAdvanced
-        {cellOptions}
-        {fieldSchema}
-        {value}
-        {autofocus}
-        label={labelPos ? null : label}
-        multi={true}
-        on:change={(e) => handleChange(e.detail)}
-      />
-    {/if}
-
-    {#if buttons?.length && controlType != "list"}
-      <div class="inline-buttons" class:vertical={multirow}>
-        {#each buttons as { text, onClick, quiet, disabled, type, size }}
+    {#key customOptions}
+      {#if controlType == "select" || controlType == "inputSelect"}
+        <CellOptions
+          {cellOptions}
+          {fieldSchema}
+          {value}
+          {autofocus}
+          multi={true}
+          on:change={(e) => handleChange(e.detail)}
+        />
+      {:else}
+        <CellOptionsAdvanced
+          {cellOptions}
+          {fieldSchema}
+          {value}
+          {autofocus}
+          label={labelPos ? null : label}
+          multi={true}
+          on:change={(e) => handleChange(e.detail)}
+        />
+      {/if}
+    {/key}
+    {#if buttons?.length && controlType == "select"}
+      <div class="inline-buttons">
+        {#each buttons as { icon, onClick, ...rest }}
           <SuperButton
-            {quiet}
-            {disabled}
-            {size}
-            {type}
-            {text}
-            on:click={enrichButtonActions(onClick, $allContext)({ value })}
+            {...rest}
+            icon={"ph ph-" + icon}
+            disabled={processStringSync(
+              rest.disabledTemplate ?? "",
+              $allContext
+            ) === true ||
+              disabled ||
+              groupDisabled ||
+              fieldState?.disabled}
+            onClick={enrichButtonActions(onClick, $allContext)}
           />
         {/each}
       </div>
